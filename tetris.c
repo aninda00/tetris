@@ -239,7 +239,7 @@ static void draw(void) {
     mvaddstr(oy + 13, px, "Controls:");
     mvaddstr(oy + 14, px, "Arrows move/rotate");
     mvaddstr(oy + 15, px, "Space  hard drop");
-    mvaddstr(oy + 16, px, "ESC    pause");
+    mvaddstr(oy + 16, px, "ESC    pause/resume");
     mvaddstr(oy + 17, px, "R      restart");
     mvaddstr(oy + 18, px, "Q      quit");
 
@@ -278,7 +278,10 @@ int main(void) {
         int ch = wgetch(stdscr);
         if (ch == 'q' || ch == 'Q') break;
 
-        if (!game_over) {
+        if (ch == 'r' || ch == 'R') {
+            reset_game();
+            last_drop = now_ms();
+        } else if (!game_over) {
             if (ch == 27) paused = !paused;
             if (!paused) {
                 switch (ch) {
@@ -290,9 +293,6 @@ int main(void) {
                     default: break;
                 }
             }
-        } else if (ch == 'r' || ch == 'R') {
-            reset_game();
-            last_drop = now_ms();
         }
 
         if (!game_over && !paused) {
